@@ -1,0 +1,47 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "fullName": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100" },
+        "email": { ".validate": "newData.isString() && newData.val().length <= 200" },
+        "rollNumber": { ".validate": "newData.isString() && newData.val().length <= 30" },
+        "categories": { "$catId": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 40" } }
+      }
+    },
+    "tasks": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "$taskId": {
+          ".validate": "newData.hasChildren(['title','priority','importance','category','completed','createdAt','ownerUid']) && newData.child('ownerUid').val() === auth.uid",
+          "title": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100" },
+          "description": { ".validate": "newData.isString() && newData.val().length <= 2000" },
+          "notes": { ".validate": "newData.isString() && newData.val().length <= 2000" },
+          "priority": { ".validate": "newData.val() === 'HIGH' || newData.val() === 'MEDIUM' || newData.val() === 'LOW'" },
+          "importance": { ".validate": "newData.val() === 'CRITICAL' || newData.val() === 'IMPORTANT' || newData.val() === 'NORMAL'" },
+          "category": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 40" },
+          "completed": { ".validate": "newData.isBoolean()" },
+          "allDay": { ".validate": "newData.isBoolean()" },
+          "startAt": { ".validate": "newData.isNumber()" },
+          "dueAt": { ".validate": "newData.isNumber()" },
+          "completedAt": { ".validate": "newData.isNumber()" },
+          "durationMinutes": { ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 1440" },
+          "reminderEnabled": { ".validate": "newData.isBoolean()" },
+          "reminderAt": { ".validate": "newData.isNumber()" },
+          "reminderOffsetMinutes": { ".validate": "newData.isNumber()" },
+          "recurrence": { ".validate": "newData.val() === 'NONE' || newData.val() === 'DAILY' || newData.val() === 'WEEKLY' || newData.val() === 'MONTHLY' || newData.val() === 'CUSTOM'" },
+          "recurrenceDays": { ".validate": "newData.isString()" },
+          "createdAt": { ".validate": "newData.isNumber()" },
+          "updatedAt": { ".validate": "newData.isNumber()" },
+          "id": { ".validate": "newData.isString()" },
+          "ownerUid": { ".validate": "newData.val() === auth.uid" },
+          "$other": { ".validate": false }
+        }
+      }
+    }
+  }
+}
